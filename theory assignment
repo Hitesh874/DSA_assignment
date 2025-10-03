@@ -1,1 +1,126 @@
 
+#include <iostream>
+using namespace std;
+
+// ================= Weather Storage Class =================
+class WeatherStorage {
+private:
+    static const int MAX_YEARS = 5;   // number of years (rows)
+    static const int MAX_CITIES = 5;  // number of cities (columns)
+    double data[MAX_YEARS][MAX_CITIES]; // 2D array to store temperatures
+
+    const double NO_DATA = -9999; // sentinel value for "no data"
+
+public:
+    // Constructor: initialize all values with NO_DATA
+    WeatherStorage() {
+        for (int i = 0; i < MAX_YEARS; i++) {
+            for (int j = 0; j < MAX_CITIES; j++) {
+                data[i][j] = NO_DATA;
+            }
+        }
+    }
+
+    // Insert a temperature for a given year and city
+    void insert(int yearIndex, int cityIndex, double temp) {
+        if (yearIndex < MAX_YEARS && cityIndex < MAX_CITIES) {
+            data[yearIndex][cityIndex] = temp;
+        } else {
+            cout << "Invalid index!\n";
+        }
+    }
+
+    // Delete (remove) temperature data
+    void remove(int yearIndex, int cityIndex) {
+        if (yearIndex < MAX_YEARS && cityIndex < MAX_CITIES) {
+            data[yearIndex][cityIndex] = NO_DATA;
+        } else {
+            cout << "Invalid index!\n";
+        }
+    }
+
+    // Retrieve temperature
+    void retrieve(int yearIndex, int cityIndex) {
+        if (data[yearIndex][cityIndex] == NO_DATA) {
+            cout << "No data available\n";
+        } else {
+            cout << "Temperature: " << data[yearIndex][cityIndex] << "°C\n";
+        }
+    }
+
+    // Print row-major order (year by year)
+    void rowMajorAccess() {
+        cout << "\nRow-Major Access (Year by Year):\n";
+        for (int i = 0; i < MAX_YEARS; i++) {
+            for (int j = 0; j < MAX_CITIES; j++) {
+                cout << data[i][j] << "\t";
+            }
+            cout << endl;
+        }
+    }
+
+    // Print column-major order (city by city)
+    void columnMajorAccess() {
+        cout << "\nColumn-Major Access (City by City):\n";
+        for (int j = 0; j < MAX_CITIES; j++) {
+            for (int i = 0; i < MAX_YEARS; i++) {
+                cout << data[i][j] << "\t";
+            }
+            cout << endl;
+        }
+    }
+
+    // Print only available data (ignore NO_DATA)
+    void handleSparseData() {
+        cout << "\nAvailable Data:\n";
+        for (int i = 0; i < MAX_YEARS; i++) {
+            for (int j = 0; j < MAX_CITIES; j++) {
+                if (data[i][j] != NO_DATA) {
+                    cout << "Year " << i << ", City " << j
+                         << " -> " << data[i][j] << "°C\n";
+                }
+            }
+        }
+    }
+
+    // Show time and space complexity
+    void analyzeComplexity() {
+        cout << "\nTime Complexity:\n";
+        cout << "- Insert/Delete/Retrieve: O(1) (direct access)\n";
+        cout << "- Traversal (Row/Column): O(n*m)\n";
+
+        cout << "Space Complexity:\n";
+        cout << "- 2D Array requires O(n*m)\n";
+    }
+};
+
+// ================= Main Function =================
+int main() {
+    WeatherStorage ws;
+
+    // Insert some sample data
+    ws.insert(0, 0, 25.3); // Year 0, City 0
+    ws.insert(0, 1, 28.7); // Year 0, City 1
+    ws.insert(1, 0, 22.5); // Year 1, City 0
+
+    // Retrieve a value
+    cout << "Retrieve Year 0, City 1: ";
+    ws.retrieve(0, 1);
+
+    // Delete a record
+    ws.remove(0, 1);
+    cout << "After deletion: ";
+    ws.retrieve(0, 1);
+
+    // Show row-major and column-major access
+    ws.rowMajorAccess();
+    ws.columnMajorAccess();
+
+    // Show only available data
+    ws.handleSparseData();
+
+    // Show complexity analysis
+    ws.analyzeComplexity();
+
+    return 0;
+}
